@@ -1,24 +1,26 @@
-import 'package:cooking_app/views/home_page.dart';
-import 'package:cooking_app/views/recipes_page.dart';
-import 'package:cooking_app/views/shopping_list_page.dart';
+import 'package:cooking_app/auth/login_page.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'models/shopping_item.dart'; // Assurez-vous d'importer le modèle
+import 'models/shopping_item.dart'; // Ensure to import your model
 import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cooking_app/views/main_page.dart'; // Import your main page
 
 void main() async {
-  // Initialisation de Hive
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
+  // Initialize Hive
   await Hive.initFlutter();
 
-  // Enregistrement de l'adaptateur pour ShoppingItem
+  // Register the adapter for ShoppingItem
   Hive.registerAdapter(ShoppingItemAdapter());
 
-  // Ouverture de la boîte 'shopping_box'
-  // await Hive.deleteBoxFromDisk('shopping_box');
+  // Open the 'shopping_box' box
   await Hive.openBox<ShoppingItem>('shopping_box');
 
-  // Démarrer l'application
   runApp(const MyApp());
 }
 
@@ -32,57 +34,34 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         textTheme: GoogleFonts.aliceTextTheme(
-          Theme.of(context).textTheme.apply(bodyColor: Colors.black, displayColor: Colors.black),
+          Theme.of(context)
+              .textTheme
+              .apply(bodyColor: Colors.black, displayColor: Colors.black),
         ),
         colorScheme: ColorScheme.fromSeed(
           seedColor: Colors.blue,
         ),
       ),
-      home: MainPage(),
+      home: AuthWrapper(),
     );
   }
 }
 
-class MainPage extends StatefulWidget {
-  @override
-  _MainPageState createState() => _MainPageState();
-}
-
-class _MainPageState extends State<MainPage> {
-  int _currentIndex = 0;
-
-  final List<Widget> _pages = [
-    HomePage(),
-    ShoppingListPage(),
-    RecipesPage(),
-  ];
-
+class AuthWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _pages[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Accueil',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart),
-            label: 'Liste Courses',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.book),
-            label: 'Recettes',
-          ),
-        ],
-      ),
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.active) {
+          if (snapshot.hasData) {
+            return MainPage(); // Redirect to MainPage if user is logged in
+          } else {
+            return LoginPage(); // Redirect to LoginScreen if user is not logged in
+          }
+        }
+        return CircularProgressIndicator(); // Show a loading spinner while waiting
+      },
     );
   }
 }

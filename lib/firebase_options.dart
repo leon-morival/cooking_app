@@ -50,19 +50,20 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBiBqjq7ifoB7B_-uFVcrdKTljks4quxGA',
-    appId: '1:379035059370:android:ae493a35d7a54f3086bcd3',
-    messagingSenderId: '379035059370',
-    projectId: 'recipes-b70dd',
-    storageBucket: 'recipes-b70dd.appspot.com',
+    apiKey: 'AIzaSyD7OfPUhF6prFi6EWLXXDk6NmusHUisAq4',
+    appId: '1:814053070769:android:73371bd200399b04fe4f90',
+    messagingSenderId: '814053070769',
+    projectId: 'recipes-app-7a8e9',
+    storageBucket: 'recipes-app-7a8e9.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCWg9BMPMS9YxTRzCcWWQZbg5L7PubUp-s',
-    appId: '1:379035059370:ios:a42948b249fe4ec986bcd3',
-    messagingSenderId: '379035059370',
-    projectId: 'recipes-b70dd',
-    storageBucket: 'recipes-b70dd.appspot.com',
+    apiKey: 'AIzaSyBaCXoUWXj7x59SYPtBwChHTkMIKUCWwGs',
+    appId: '1:814053070769:ios:060a2408f1a62022fe4f90',
+    messagingSenderId: '814053070769',
+    projectId: 'recipes-app-7a8e9',
+    storageBucket: 'recipes-app-7a8e9.appspot.com',
     iosBundleId: 'com.example.cookingApp',
   );
+
 }
