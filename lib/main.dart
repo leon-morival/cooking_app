@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'models/shopping_item.dart'; // Assurez-vous d'importer le modèle
+import 'package:google_fonts/google_fonts.dart';
 
 void main() async {
   // Initialisation de Hive
@@ -30,6 +31,9 @@ class MyApp extends StatelessWidget {
       title: 'Cooking App',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        textTheme: GoogleFonts.aliceTextTheme(
+          Theme.of(context).textTheme.apply(bodyColor: Colors.black, displayColor: Colors.black),
+        ),
         colorScheme: ColorScheme.fromSeed(
           seedColor: Colors.blue,
         ),
