@@ -4,7 +4,6 @@ class Recipe {
   final String id;
   final String name;
   final String imageURL;
-  final double rating;
   final String description;
   final List<String> ingredients;
   final List<String> steps;
@@ -16,7 +15,6 @@ class Recipe {
     required this.id,
     required this.name,
     required this.imageURL,
-    required this.rating,
     required this.description,
     required this.ingredients,
     required this.steps,
@@ -30,7 +28,6 @@ class Recipe {
       id: documentId,
       name: data['name'],
       imageURL: data['imageURL'],
-      rating: data['rating'],
       description: data['description'],
       ingredients: List<String>.from(data['ingredients']),
       steps: List<String>.from(data['steps']),
@@ -44,7 +41,6 @@ class Recipe {
     return {
       'name': name,
       'imageURL': imageURL,
-      'rating': rating,
       'description': description,
       'ingredients': ingredients,
       'steps': steps,

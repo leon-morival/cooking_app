@@ -1,3 +1,4 @@
+import 'package:cooking_app/views/add_recipe.dart';
 import 'package:flutter/material.dart';
 
 class RecipesPage extends StatefulWidget {
@@ -24,14 +25,13 @@ class _RecipesPageState extends State<RecipesPage> {
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 20), // Add space between text and search bar
+            const SizedBox(height: 20),
             TextField(
               decoration: InputDecoration(
                 hintText: "Rechercher des recettes...",
-                suffixIcon:
-                    const Icon(Icons.search), // Search icon on the right
+                suffixIcon: const Icon(Icons.search),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0), // Rounded corners
+                  borderRadius: BorderRadius.circular(8.0),
                 ),
                 contentPadding: const EdgeInsets.symmetric(
                     horizontal: 15.0, vertical: 10.0),
@@ -41,7 +41,12 @@ class _RecipesPageState extends State<RecipesPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const AddRecipePage()),
+          );
+        },
         child: const Icon(Icons.add),
       ),
     );
