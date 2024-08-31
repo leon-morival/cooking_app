@@ -71,71 +71,80 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
               for (var item in items) {
                 listSections.add(
                   Dismissible(
-                    key: Key(item.id), // Use the unique ID as the key
-                    direction: DismissDirection.endToStart,
-                    background: Container(
-                      color: Colors.red,
-                      alignment: Alignment.centerRight,
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: const Icon(
-                        Icons.delete,
-                        color: Colors.white,
-                      ),
-                    ),
-                    confirmDismiss: (direction) async {
-                      return await showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: const Text('Confirmer la suppression'),
-                            content: const Text(
-                                'Voulez-vous vraiment supprimer cet aliment ?'),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop(false);
-                                },
-                                child: const Text('Annuler'),
-                              ),
-                              ElevatedButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop(true);
-                                },
-                                child: const Text('Supprimer'),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    },
-                    onDismissed: (direction) {
-                      item.delete();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('${item.name} supprimé'),
-                        ),
-                      );
-                    },
-                    child: ListTile(
-                      title: Text(
-                        item.name,
-                        style: TextStyle(
-                          decoration: item.isBought
-                              ? TextDecoration.lineThrough
-                              : TextDecoration.none,
+                      key: Key(item.id), // Use the unique ID as the key
+                      direction: DismissDirection.endToStart,
+                      background: Container(
+                        color: Colors.red,
+                        alignment: Alignment.centerRight,
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: const Icon(
+                          Icons.delete,
+                          color: Colors.white,
                         ),
                       ),
-                      trailing: Checkbox(
-                        value: item.isBought,
-                        onChanged: (value) {
-                          setState(() {
-                            item.isBought = value ?? false;
-                            item.save();
-                          });
-                        },
-                      ),
-                    ),
-                  ),
+                      confirmDismiss: (direction) async {
+                        return await showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: const Text('Confirmer la suppression'),
+                              content: const Text(
+                                  'Voulez-vous vraiment supprimer cet aliment ?'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop(false);
+                                  },
+                                  child: const Text('Annuler'),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop(true);
+                                  },
+                                  child: const Text('Supprimer'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      onDismissed: (direction) {
+                        item.delete();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('${item.name} supprimé'),
+                          ),
+                        );
+                      },
+                      child: Card(
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 8.0, horizontal: 16.0),
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 1.0, horizontal: 16.0),
+                          title: Text(
+                            item.name,
+                            style: TextStyle(
+                              decoration: item.isBought
+                                  ? TextDecoration.lineThrough
+                                  : TextDecoration.none,
+                            ),
+                          ),
+                          trailing: Checkbox(
+                            value: item.isBought,
+                            onChanged: (value) {
+                              setState(() {
+                                item.isBought = value ?? false;
+                                item.save();
+                              });
+                            },
+                          ),
+                        ),
+                      )),
                 );
               }
             });
