@@ -4,6 +4,8 @@ import 'package:cooking_app/views/recipes_page.dart';
 import 'package:cooking_app/views/shopping_list_page.dart';
 
 class MainPage extends StatefulWidget {
+  const MainPage({super.key});
+
   @override
   _MainPageState createState() => _MainPageState();
 }
@@ -12,9 +14,9 @@ class _MainPageState extends State<MainPage> {
   int _currentIndex = 0;
 
   final List<Widget> _pages = [
-    HomePage(),
-    ShoppingListPage(),
-    RecipesPage(),
+    const HomePage(),
+    const ShoppingListPage(),
+    const RecipesPage(),
   ];
 
   @override

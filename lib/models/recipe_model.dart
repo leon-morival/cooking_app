@@ -10,6 +10,9 @@ class Recipe {
   final DateTime createdAt;
   final DateTime updatedAt;
   final String authorId;
+  final Duration duration;
+  final bool validated; // New field for validation status
+  final bool published; // New field for publication status
 
   Recipe({
     required this.id,
@@ -21,6 +24,9 @@ class Recipe {
     required this.createdAt,
     required this.updatedAt,
     required this.authorId,
+    required this.duration,
+    required this.validated, // Initialize validated
+    required this.published, // Initialize published
   });
 
   factory Recipe.fromFirestore(Map<String, dynamic> data, String documentId) {
@@ -34,6 +40,12 @@ class Recipe {
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
       authorId: data['authorId'],
+      duration: Duration(
+        hours: data['duration']['hours'] ?? 0,
+        minutes: data['duration']['minutes'] ?? 0,
+      ),
+      validated: data['validated'] ?? false, // Handle validated field
+      published: data['published'] ?? false, // Handle published field
     );
   }
 
@@ -47,6 +59,12 @@ class Recipe {
       'createdAt': Timestamp.fromDate(createdAt),
       'updatedAt': Timestamp.fromDate(updatedAt),
       'authorId': authorId,
+      'duration': {
+        'hours': duration.inHours,
+        'minutes': duration.inMinutes.remainder(60),
+      },
+      'validated': validated, // Include validated field
+      'published': published, // Include published field
     };
   }
 }

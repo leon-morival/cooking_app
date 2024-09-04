@@ -1,7 +1,6 @@
 import 'package:cooking_app/auth/login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'models/shopping_item.dart'; // Ensure to import your model
 import 'package:google_fonts/google_fonts.dart';
@@ -42,12 +41,14 @@ class MyApp extends StatelessWidget {
           seedColor: Colors.blue,
         ),
       ),
-      home: AuthWrapper(),
+      home: const AuthWrapper(),
     );
   }
 }
 
 class AuthWrapper extends StatelessWidget {
+  const AuthWrapper({super.key});
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<User?>(
@@ -55,12 +56,12 @@ class AuthWrapper extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.active) {
           if (snapshot.hasData) {
-            return MainPage(); // Redirect to MainPage if user is logged in
+            return const MainPage(); // Redirect to MainPage if user is logged in
           } else {
-            return LoginPage(); // Redirect to LoginScreen if user is not logged in
+            return const LoginPage(); // Redirect to LoginScreen if user is not logged in
           }
         }
-        return CircularProgressIndicator(); // Show a loading spinner while waiting
+        return const CircularProgressIndicator(); // Show a loading spinner while waiting
       },
     );
   }

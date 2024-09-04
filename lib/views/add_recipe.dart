@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cooking_app/models/recipe_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter/cupertino.dart'; // Import Cupertino package
 
 class AddRecipePage extends StatefulWidget {
   const AddRecipePage({super.key});
@@ -14,6 +16,7 @@ class AddRecipePage extends StatefulWidget {
 
 class _AddRecipePageState extends State<AddRecipePage> {
   final _formKey = GlobalKey<FormState>();
+  final User? user = FirebaseAuth.instance.currentUser;
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
@@ -21,6 +24,7 @@ class _AddRecipePageState extends State<AddRecipePage> {
   final TextEditingController _stepsController = TextEditingController();
 
   File? _imageFile; // Variable to hold the selected image
+  Duration _duration = Duration.zero; // New field for duration
 
   final ImagePicker _picker = ImagePicker();
 
@@ -70,11 +74,77 @@ class _AddRecipePageState extends State<AddRecipePage> {
     );
   }
 
+  void _showDurationPicker() {
+    // Initial selected values
+    int selectedHours = _duration.inHours;
+    int selectedMinutes = _duration.inMinutes.remainder(60);
+
+    showCupertinoModalPopup(
+      context: context,
+      builder: (context) {
+        return CupertinoActionSheet(
+          title: const Text('Choisir la durée'),
+          message: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: CupertinoPicker(
+                  itemExtent: 32,
+                  scrollController:
+                      FixedExtentScrollController(initialItem: selectedHours),
+                  onSelectedItemChanged: (index) {
+                    selectedHours = index;
+                  },
+                  children: List<Widget>.generate(24, (index) {
+                    return Center(child: Text('$index heures'));
+                  }),
+                ),
+              ),
+              Expanded(
+                child: CupertinoPicker(
+                  itemExtent: 32,
+                  scrollController:
+                      FixedExtentScrollController(initialItem: selectedMinutes),
+                  onSelectedItemChanged: (index) {
+                    selectedMinutes = index;
+                  },
+                  children: List<Widget>.generate(60, (index) {
+                    return Center(child: Text('$index minutes'));
+                  }),
+                ),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            CupertinoActionSheetAction(
+              child: const Text('Valider'),
+              onPressed: () {
+                Navigator.pop(context);
+                setState(() {
+                  _duration = Duration(
+                    hours: selectedHours,
+                    minutes: selectedMinutes,
+                  );
+                });
+              },
+            ),
+            CupertinoActionSheetAction(
+              child: const Text('Annuler'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add a Recipe'),
+        title: const Text('Créer une recette'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -84,18 +154,19 @@ class _AddRecipePageState extends State<AddRecipePage> {
             children: [
               // Image Picker
               _imageFile == null
-                  ? const Text('No image selected.')
+                  ? const Text("Pas d'image sélectionné.")
                   : Image.file(_imageFile!),
               ElevatedButton(
                 onPressed: _showImageSourceSelection,
-                child: const Text('Pick Image'),
+                child: const Text('Choisir une image'),
               ),
               TextFormField(
                 controller: _nameController,
-                decoration: const InputDecoration(labelText: 'Recipe Name'),
+                decoration:
+                    const InputDecoration(labelText: 'Nom de la recette'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter the recipe name';
+                    return 'Veuillez rentrer le nom de la recette';
                   }
                   return null;
                 },
@@ -105,7 +176,7 @@ class _AddRecipePageState extends State<AddRecipePage> {
                 decoration: const InputDecoration(labelText: 'Description'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter a description';
+                    return 'Veuillez entrer une description';
                   }
                   return null;
                 },
@@ -113,24 +184,31 @@ class _AddRecipePageState extends State<AddRecipePage> {
               TextFormField(
                 controller: _ingredientsController,
                 decoration: const InputDecoration(
-                    labelText: 'Ingredients (comma-separated)'),
+                    labelText: 'Ingredients (séparé par des virgules)'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter ingredients';
+                    return 'Merci de rentrer des ingrédients';
                   }
                   return null;
                 },
               ),
               TextFormField(
                 controller: _stepsController,
-                decoration:
-                    const InputDecoration(labelText: 'Steps (comma-separated)'),
+                decoration: const InputDecoration(
+                    labelText: 'Etapes (séparé par des virgules)'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter steps';
+                    return 'Veuillez rentrer les différentes étapes';
                   }
                   return null;
                 },
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _showDurationPicker,
+                child: Text(
+                  'Choisir la durée de la recette: ${_duration.inHours}h ${_duration.inMinutes.remainder(60)}m',
+                ),
               ),
               const SizedBox(height: 20),
               ElevatedButton(
@@ -139,7 +217,7 @@ class _AddRecipePageState extends State<AddRecipePage> {
                     _addRecipe();
                   }
                 },
-                child: const Text('Add Recipe'),
+                child: const Text('Ajouté la recette'),
               ),
             ],
           ),
@@ -153,7 +231,7 @@ class _AddRecipePageState extends State<AddRecipePage> {
       // Handle case where no image is selected
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Please select an image.'),
+          content: Text('Merci de selectionner une image.'),
         ),
       );
       return;
@@ -169,7 +247,10 @@ class _AddRecipePageState extends State<AddRecipePage> {
       steps: _stepsController.text.split(','),
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
-      authorId: 'exampleAuthorId', // Replace with actual author ID
+      authorId: user!.uid, // Replace with actual author ID
+      duration: _duration,
+      published: false,
+      validated: false, // Add the duration
     );
 
     try {
@@ -186,7 +267,7 @@ class _AddRecipePageState extends State<AddRecipePage> {
       // Show success message
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Recipe added successfully!'),
+          content: Text('La recette à bien été ajoutée!'),
           duration: Duration(seconds: 2),
         ),
       );
@@ -196,8 +277,8 @@ class _AddRecipePageState extends State<AddRecipePage> {
       // Handle any errors
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to add recipe: $e'),
-          duration: Duration(seconds: 2),
+          content: Text("erreur lors de l'ajout de la recette: $e"),
+          duration: const Duration(seconds: 2),
         ),
       );
     }

@@ -65,5 +65,4 @@ class DefaultFirebaseOptions {
     storageBucket: 'recipes-app-7a8e9.appspot.com',
     iosBundleId: 'com.example.cookingApp',
   );
-
 }
