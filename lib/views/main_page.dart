@@ -1,3 +1,4 @@
+import 'package:cooking_app/views/meal_prep_page.dart';
 import 'package:flutter/material.dart';
 import 'package:cooking_app/views/home_page.dart';
 import 'package:cooking_app/views/recipes_page.dart';
@@ -16,6 +17,7 @@ class _MainPageState extends State<MainPage> {
   final List<Widget> _pages = [
     const HomePage(),
     const ShoppingListPage(),
+    const MealPrepPage(),
     const RecipesPage(),
   ];
 
@@ -40,10 +42,18 @@ class _MainPageState extends State<MainPage> {
             label: 'Liste Courses',
           ),
           BottomNavigationBarItem(
+            icon: Icon(Icons.event_note),
+            label: 'Meal Prep',
+          ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.book),
             label: 'Recettes',
           ),
         ],
+        // Explicitly set colors
+        selectedItemColor: Colors.blue, // Color for selected item
+        unselectedItemColor: Colors.grey, // Color for unselected items
+        backgroundColor: Colors.white, // Background color of the bar
       ),
     );
   }

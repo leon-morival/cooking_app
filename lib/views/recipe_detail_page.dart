@@ -10,7 +10,7 @@ class RecipeDetailPage extends StatelessWidget {
   String _formatDuration(Duration duration) {
     final hours = duration.inHours;
     final minutes = duration.inMinutes.remainder(60);
-    return '${hours > 0 ? '$hours hours ' : ''}${minutes > 0 ? '$minutes minutes' : ''}';
+    return '${hours > 0 ? '$hours heures ' : ''}${minutes > 0 ? '$minutes minutes' : ''}';
   }
 
   @override
@@ -45,7 +45,8 @@ class RecipeDetailPage extends StatelessWidget {
               if (recipe.duration != Duration.zero)
                 Text(
                   'Temps de préparation: ${_formatDuration(recipe.duration)}',
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 18),
                 ),
 
               const SizedBox(height: 16.0),
@@ -53,7 +54,8 @@ class RecipeDetailPage extends StatelessWidget {
               // Display recipe name
               Text(
                 recipe.name,
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                style:
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
               ),
 
               const SizedBox(height: 8.0),
@@ -71,9 +73,7 @@ class RecipeDetailPage extends StatelessWidget {
                 'Ingredients',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 23),
               ),
-              ...recipe.ingredients
-                  .map((ingredient) => Text('- $ingredient'))
-                  ,
+              ...recipe.ingredients.map((ingredient) => Text('- $ingredient')),
 
               const SizedBox(height: 16.0),
 
@@ -92,7 +92,7 @@ class RecipeDetailPage extends StatelessWidget {
                       text: TextSpan(
                         children: [
                           TextSpan(
-                            text: 'STEP $index \n',
+                            text: 'ETAPE $index \n',
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
